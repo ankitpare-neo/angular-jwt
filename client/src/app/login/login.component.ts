@@ -16,7 +16,7 @@ export class LoginComponent {
 
   public submit() {
     this.auth.login(this.username, this.password)
-      .pipe(first())
+      // .pipe(first())
       .subscribe(
         result => this.router.navigate(['todos']),
         err => this.error = 'Could not authenticate'

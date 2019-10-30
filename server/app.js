@@ -4,6 +4,7 @@ const app = express()
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
+const cors = require('cors');
 
 var TODOS = [
     { 'id': 1, 'user_id': 1, 'name': "Get Milk", 'completed': false },
@@ -16,6 +17,13 @@ var USERS = [
     { 'id': 2, 'username': 'paul' },
     { 'id': 3, 'username': 'sebastian' },
 ];
+
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', "*");
+    res.header('Access-Control-Allow-Methods', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+}
 function getTodos(userID) {
     var todos = _.filter(TODOS, ['user_id', userID]);
 
@@ -29,10 +37,10 @@ function getTodo(todoID) {
 function getUsers() {
     return USERS;
 }
-
+app.use(cors());
 app.use(bodyParser.json());
-app.use(expressJwt({secret: 'todo-app-super-shared-secret'}).unless({path: ['/api/auth']}));
-
+// app.use(expressJwt({secret: 'todo-app-super-shared-secret'}).unless({path: ['/api/auth']}));
+app.use(allowCrossDomain);
 app.get('/', function (req, res) {
     res.send('Angular JWT Todo API Server')
 });
